@@ -6,8 +6,8 @@ require 'lightspeed/version'
 Gem::Specification.new do |spec|
   spec.name          = "lightspeed"
   spec.version       = Lightspeed::VERSION
-  spec.authors       = ["Sebastian Bean"]
-  spec.email         = ["sebastian@ginlanemedia.com"]
+  spec.authors       = ["Sebastian Bean", "Denis Ivanov"]
+  spec.email         = ["sebastian@ginlanemedia.com", "denis@downshiftlabs.com"]
   spec.description   = %q{Write a gem description}
   spec.summary       = %q{Write a gem summary}
   spec.homepage      = ""
@@ -23,7 +23,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "pry"
   spec.add_development_dependency "pry-debugger"
 
-  # spec.add_runtime_dependency "rails"
-  spec.add_runtime_dependency "httparty"
-  # spec.add_runtime_dependency "mongoid","~> 3.1.5"
+  spec.add_dependency "httparty"
 end
