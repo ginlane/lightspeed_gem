@@ -10,18 +10,19 @@ module Lightspeed
       end
 
       def get command, query
-        Client.get full_url(command), query
+        Client.get full_path(command), query
       end
 
-      def full_url suffix
+      def full_path suffix = nil
         result = "#{resource_path}#{suffix}" 
-        result = "#{result}/" unless result.last == '/'
+        result = "#{result}/" unless result[-1] == '/'
         result
       end
 
       def resource_path
-        raise "Calling an abstract method! Use actual resource classes" if name == 'Lightspeed::Resource'
-        "#{name.downcase}s/"
+        clazz = name.gsub("Lightspeed::",'')
+        raise "Calling an abstract method! Use actual resource classes" if clazz == 'Resource'
+        "#{clazz.downcase}s/"
       end
     end  
   end

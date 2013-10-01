@@ -12,7 +12,7 @@ module Lightspeed
 
     class << self
       def config_from_yaml file, env = nil
-        opts = Yaml::load(File.open file)
+        opts = YAML.load(File.open file)
 
         config = if env
           opts[env]

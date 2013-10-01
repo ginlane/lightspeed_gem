@@ -1,0 +1,6 @@
+user_agent: com.some_client/1.0
+app_id: alpha123
+cookie: LS_SERVER_SESSION_ID=things=; Path=/; secure;
+endpoint: https://localhost:9966
+username: bobby
+password: tables
