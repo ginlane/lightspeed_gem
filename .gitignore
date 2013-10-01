@@ -3,6 +3,7 @@ lightspeed.yml
 .DS_Store
 *.gem
 *.rbc
+*.swp
 .bundle
 .config
 .yardoc
