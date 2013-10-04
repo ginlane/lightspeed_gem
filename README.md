@@ -1,24 +1,34 @@
 # Lightspeed
 
-TODO: Write a gem description
+This gem exposes a Ransack-like predicate building syntax for querying Lightspeed. Additionally, it provides pagination API, sanitizes and type-csts returned values and provides a few helper methods for interacting with the data.
+
+NOTE: Currently this gem supports read-only operations exclusively. 
 
 ## Installation
 
-Add this line to your application's Gemfile:
+This is a private gem. As such you will need to clone it manually, like so:
+```shell
+git clone git@github.com:ginlane/lightspeed_gem.git
+```
 
-    gem 'lightspeed'
-
-And then execute:
-
-    $ bundle
-
-Or install it yourself as:
-
-    $ gem install lightspeed
+Build the gem and install it locally. For version 0.0.2, it would look like this:
+```shell
+gem build lightspeed.gemspec && gem install lightspeed-0.0.2.gem
+```
 
 ## Usage
+```ruby
+require 'lightspeed'
+Lightspeed::Client.config_from_yaml 'lightspeed.yml'
 
-TODO: Write usage instructions here
+# Base querying methods for Customer model
+Lightspeed::Customer.all(count: 10)
+Lightspeed::Customer.find 7083
+
+# Similarly for Invoice and Product
+Lightspeed::Product.all(count: 2)
+Lightspeed::Invoice.all(count: 2)
+```
 
 ## Contributing
 
