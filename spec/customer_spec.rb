@@ -22,5 +22,17 @@ describe Lightspeed::Customer do
       end
     end
   end
+
+  # Instance methods below
+
+  context 'on #new' do
+    context 'w/ a valid hash' do
+      it 'returns an instance' do
+        h = {name: {first: "Bobby", last: "Tables"}}
+        inst = singleton.new(h)
+        inst.name[:first].should == 'Bobby'
+      end
+    end
+  end
 end
 

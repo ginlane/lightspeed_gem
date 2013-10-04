@@ -2,9 +2,11 @@ require "httparty"
 
 require "lightspeed/version"
 require "lightspeed/client"
+
 require "lightspeed/resource"
 require "lightspeed/customer"
 require "lightspeed/product"
+require "lightspeed/invoice"
 
 #HTTParty::Request.const_set('SupportedHTTPMethods', [
 #      Net::HTTP::Get,

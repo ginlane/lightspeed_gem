@@ -1,5 +1,19 @@
 module Lightspeed
   class Customer < Resource
+    self.fields = [
+      "name", "company", "email", "homepage", "phone_numbers", "photo", "is_company", "billing", "shipping", "flags", "birthdate", "credit_limit", "groups", "customer_id", "credit_status", "ar_balance", "import_id", "user", "tax_code", "tax_exemption", "language", "notes", "uri", "id"
+    ]
+
+    attr_accessor *self.fields
+
+    def first_name
+      name && name["first"]
+    end
+
+    def last_name
+      name && name["last"]
+    end
+
     self.filters = [
       [:address1_1, :string, "Address line 1 (Billing address)"],
       [:address1_2, :string, "Address line 2 (Billing address)"],

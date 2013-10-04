@@ -1,5 +1,9 @@
 module Lightspeed
   class Product < Resource
+    self.fields = ["class", "currency", "code", "costs", "flags", "sell_price", "pricing_levels", "created", "modified", "description", "long_web_description", "family", "gl_product", "product_id", "import_id", "inventory", "margin", "minimum_margin", "notes", "product_info", "reorder", "sells", "supplier", "supplier_code", "upc", "web", "keywords", "multi_store_label", "multi_store_master_label", "categories", "related_products", "serial_numbers", "product_photos", "uri", "id", "full_render"]
+
+    attr_accessor *self.fields
+
     self.filters = [
       [:class_name, :string, "Class"],
       [:code, :string, "Product Code"],
