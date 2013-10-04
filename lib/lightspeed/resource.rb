@@ -28,7 +28,7 @@ module Lightspeed
         when Hash
           new_h = {}
           value.each do |k,v|
-            new_h[k] = cast! v
+            new_h[k.to_sym] = cast! v
           end
           new_h
         when String
@@ -86,7 +86,7 @@ module Lightspeed
 
     def initialize hash
       hash.each do |k, v|
-        next unless self.class.fields.include? k.to_s
+        next unless self.class.fields.include? k
         send("#{k}=", v)
       end
     end

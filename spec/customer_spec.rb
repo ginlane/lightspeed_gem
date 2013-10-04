@@ -23,14 +23,27 @@ describe Lightspeed::Customer do
     end
   end
 
-  # Instance methods below
-
-  context 'on #new' do
+  context 'on ::new' do
     context 'w/ a valid hash' do
       it 'returns an instance' do
         h = {name: {first: "Bobby", last: "Tables"}}
         inst = singleton.new(h)
         inst.name[:first].should == 'Bobby'
+      end
+    end
+  end
+
+  # Instance methods below
+
+  context 'for instances' do
+    let(:instance) do
+      Lightspeed::Customer.new(name: {first: 'Bobby', last: 'Tables'})
+    end
+
+    context 'on #first_ and #last_name' do
+      it "interpolates datastore hash" do
+        instance.first_name.should == 'Bobby'
+        instance.last_name.should == 'Tables'
       end
     end
   end
