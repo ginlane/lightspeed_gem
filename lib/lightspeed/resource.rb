@@ -1,11 +1,13 @@
 module Lightspeed
   class Resource
     class << self
-      def all query = nil
+      attr_accessor :filters
+
+      def all query = {}
         get nil, query
       end
 
-      def find_by_id id, query = nil
+      def find_by_id id, query = {}
         get id, query
       end
 
@@ -22,7 +24,7 @@ module Lightspeed
       def resource_path
         clazz = name.gsub("Lightspeed::",'')
         raise "Calling an abstract method! Use actual resource classes" if clazz == 'Resource'
-        "#{clazz.downcase}s/"
+        "/#{clazz.downcase}s/"
       end
     end  
   end

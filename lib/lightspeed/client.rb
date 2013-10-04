@@ -36,10 +36,10 @@ module Lightspeed
         headers 'X-PAPPID'         => @app_id
         headers 'Cookie'           => @cookie if @cookie
       end
-    end
 
-    def logout
-      self.post '/sessions/current/logout/'
+      def logout
+        post '/sessions/current/logout/'
+      end
     end
   end
 end

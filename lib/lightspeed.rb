@@ -4,6 +4,7 @@ require "lightspeed/version"
 require "lightspeed/client"
 require "lightspeed/resource"
 require "lightspeed/customer"
+require "lightspeed/product"
 
 #HTTParty::Request.const_set('SupportedHTTPMethods', [
 #      Net::HTTP::Get,
@@ -19,40 +20,6 @@ require "lightspeed/customer"
 #      Net::HTTP::Unlock
 #    ])
 module Lightspeed
-  #class Api
-
-  #  attr_accessor :attributes, :id
-
-  #  @configured = false
-  #  def self.configure(config)
-  #    base_uri "#{config[:endpoint]}/api/"
-  #    basic_auth config[:username], config[:password]
-  #    headers 'User-Agent'       => config[:user_agent]
-  #    headers 'X-PAPPID'         => config[:app_id]
-  #    headers 'Cookie'           => config[:cookie] unless config[:cookie].nil?
-
-
-  #    @configured = true 
-  #  end
-
-  #	def self.load_config_file(path="lightspeed.yml")
-  #    if defined?(Rails)
-  #      raw_config = File.read(File.join(Rails.root, 'config', path))
-  #      env = Rails.env
-  #    else
-  #      raw_config = File.read(File.join('.', 'config', path))
-  #      env = 'development'
-  #    end
-
-	#    YAML.load(raw_config)[env]
-
-  #	end
-
-  #  def initialize(config=nil)
-  #    config ||= self.class.load_config_file 
-  #    self.class.configure config
-  #  end
-
   #  def self.lock(path, options={}, &block)
   #    perform_request Net::HTTP::Lock, path, options, &block      
   #  end
