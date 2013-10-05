@@ -2,7 +2,7 @@ module Lightspeed
   class Resource
     class << self
       attr_accessor :filters, :fields
-      QUERY_KEYS = [:count, :order_by, :filter]
+      QUERY_KEYS = [:count, :order_by, :filters]
 
       def all query = {}
         find_by_id(nil,  query)
