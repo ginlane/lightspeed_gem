@@ -1,3 +1,5 @@
+require 'set'
+
 module Lightspeed
   class PredicateEngine
     # Ideas on constant formation borrowed from https://github.com/ernie/ransack/blob/master/lib/ransack/constants.rb

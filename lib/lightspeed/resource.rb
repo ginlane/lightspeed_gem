@@ -2,6 +2,7 @@ module Lightspeed
   class Resource
     class << self
       attr_accessor :filters, :fields
+      QUERY_KEYS = [:count, :order_by, :filter]
 
       def all query = {}
         find_by_id(nil,  query)
@@ -9,7 +10,7 @@ module Lightspeed
 
       def find_by_id id, query = {}
         resp = get(id, query)
-        data = resp[resource_name] || resp[resource_plural][resource_name]
+        data = resp[resource_name.to_sym] || resp[resource_plural.to_sym][resource_name.to_sym]
 
         if id
           self.new data
@@ -55,8 +56,15 @@ module Lightspeed
       end
 
       def get command, opts
+        validate opts
         resp = Client.get full_path(command), {query: opts}
         cast!(resp.parsed_response)
+      end
+
+      def validate opts
+        opts.keys.each do |key|
+          raise "Unsupported query key: #{key}." unless QUERY_KEYS.include? key.to_sym
+        end
       end
 
       def full_path suffix = nil
