@@ -19,7 +19,6 @@ module Lightspeed
           data.map{|hash| self.new hash}
         end
       end
-
       alias :find :find_by_id
 
       def cast! value
