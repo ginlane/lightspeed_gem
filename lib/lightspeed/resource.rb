@@ -56,8 +56,15 @@ module Lightspeed
 
       def get command, opts
         validate opts
+        add_fiters! opts
         resp = Client.get full_path(command), {query: opts}
         cast!(resp.parsed_response)
+      end
+
+      def add_filters! hash
+        pe = PredicateEngine.new filters
+        pe.add_filters hash
+        hash[:filters] = pe.compiled_predicates.join(' AND ')
       end
 
       def validate opts

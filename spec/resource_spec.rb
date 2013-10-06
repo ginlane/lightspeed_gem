@@ -21,10 +21,7 @@ describe Lightspeed::Resource do
 
   context 'on ::validate' do
     before do
-      singleton.fields = [
-        :current,
-        :date_cre
-      ]
+      singleton.fields = [:current, :date_cre]
     end
 
     context 'with a bad sort field' do
@@ -36,6 +33,22 @@ describe Lightspeed::Resource do
     context 'with a bad sort order' do
       it 'raises' do
         lambda{ singleton.validate({:order_by => 'current alpha'})}.should raise_error(/invalid sort/i)
+      end
+    end
+  end
+
+  context 'on ::add_filters' do
+    before do
+      singleton.fields = [:current, :sku]
+      singleton.filters = [
+        [:current, :boolean, 'Somee desc'],
+        [:sku, :string, 'some more desc']
+      ]
+    end
+
+    context 'for valid input' do
+      it 'compiles and `AND` joins filters' do
+        singleton.add_filters!(:current_true => '', :sku_start => 'BEG').should == '(current == TRUEPREDICATE) AND (sku BEGINSWITH[cd] "BEG")'
       end
     end
   end

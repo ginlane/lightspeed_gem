@@ -26,6 +26,10 @@ module Lightspeed
       :not_null => {:operator => '==', :formatter => proc {|v| 'nil'}, :compound => 'NOT'}
     }
 
+    def initialize filterz
+      self.filters = filterz
+    end
+
     def fields
       raise "Please set filters before building filter rules. Use #filters= " unless filters and !filters.empty?
 
