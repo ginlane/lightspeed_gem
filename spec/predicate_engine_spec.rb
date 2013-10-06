@@ -65,8 +65,20 @@ describe Lightspeed::PredicateEngine do
         end
 
         context 'for strings' do
-          context 'for `contains` predicate' do
+          context 'for `comparisons`' do
+            it 'raises' do
+              lambda{ subject.add_filters(code_gt: 'VAL')}.should raise_error(/cannot use .+ predicate/i)
+            end
+          end
 
+          context 'for `==` predicate' do
+            it 'translates o NSPredicate' do
+              subject.add_filters(code_eq: 'VAL')
+              subject.compiled_predicates.should == ['(code == "VAL")']
+            end
+          end
+
+          context 'for `contains` predicate' do
             it 'translates to NSPredicate' do
               subject.add_filters(code_cont: 'VAL')
               subject.compiled_predicates.should == ['(code CONTAINS[cd] "VAL")']
@@ -79,7 +91,6 @@ describe Lightspeed::PredicateEngine do
           end
 
           context 'for `start` predicate' do
-
             it 'translates to NSPredicate' do
               subject.add_filters(code_start: 'BEG')
               subject.compiled_predicates.should == ['(code BEGINSWITH[cd] "BEG")']

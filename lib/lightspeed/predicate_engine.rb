@@ -10,18 +10,18 @@ module Lightspeed
     PREDICATE_TYPES = {
       :eq => {:operator => '=='},
       :not_eq => {:operator => '<>'},
-      :lt => {:operator => '<'},
-      :lteq => {:operator => '<='},
-      :gt => {:operator => '>'},
-      :gteq => {:operator => '>='},
-      :cont => {:operator => 'CONTAINS[cd]'},
-      :not_cont => {:operator => 'CONTAINS[cd]', :compound => 'NOT'},
-      :start => {:operator => 'BEGINSWITH[cd]'},
-      :not_start => {:operator => 'BEGINSWITH[cd]', :compound => 'NOT'},
-      :end =>  {:operator => 'ENDSWITH[cd]' },
-      :not_end => {:operator => 'ENDSWITH[cd]', :compound => 'NOT'},
-      :true => {:operator => '==', :formatter => proc {|v| 'TRUEPREDICATE'}},
-      :false => {:operator => '==', :formatter => proc {|v| 'FALSEPREDICATE' }},
+      :lt => {:operator => '<', :only => [:float, :integer]},
+      :lteq => {:operator => '<=', :only => [:float, :integer]},
+      :gt => {:operator => '>', :only => [:float, :integer]},
+      :gteq => {:operator => '>=', :only => [:float, :integer]},
+      :cont => {:operator => 'CONTAINS[cd]', :only => [:string]},
+      :not_cont => {:operator => 'CONTAINS[cd]', :compound => 'NOT', :only => [:string]},
+      :start => {:operator => 'BEGINSWITH[cd]', :only => [:string]},
+      :not_start => {:operator => 'BEGINSWITH[cd]', :compound => 'NOT', :only => [:string]},
+      :end =>  {:operator => 'ENDSWITH[cd]', :only => [:string] },
+      :not_end => {:operator => 'ENDSWITH[cd]', :compound => 'NOT', :only => [:string]},
+      :true => {:operator => '==', :formatter => proc {|v| 'TRUEPREDICATE'}, :only => [:boolean]},
+      :false => {:operator => '==', :formatter => proc {|v| 'FALSEPREDICATE' }, :only => [:boolean]},
       :null => {:operator => '==', :formatter => proc {|v| 'nil'}},
       :not_null => {:operator => '==', :formatter => proc {|v| 'nil'}, :compound => 'NOT'}
     }
@@ -40,11 +40,23 @@ module Lightspeed
       end
     end
 
+    def validate_filter field, predicate, opts
+      data_type = (
+        refined = filters.select{|f| f[0] == field.to_sym} and
+        filter = refined[0] and
+        filter[1]
+      )
+
+      raise "Cannot use `#{predicate}` predicate on #{data_type} fields" if restriction = opts[:only] and !restriction.include? data_type
+    end
+
     def add_filter field_cond, value
       field, predicate = separate_field_and_predicate field_cond.to_s
       opts = PREDICATE_TYPES[predicate.to_sym]
       formatter, compound, operator = opts.values_at(:formatter, :compound, :operator)
 
+      validate_filter field, predicate, opts
+      
       converted_value = (formatter and formatter.call(value)) || format_typed_value(value)
       refinement = "#{field} #{operator} #{converted_value}"
       refinement = "#{compound} (#{refinement})" if compound
