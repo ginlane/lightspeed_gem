@@ -18,4 +18,25 @@ describe Lightspeed::Resource do
       singleton.cast!(h)[:c].should == [true]
     end
   end
+
+  context 'on ::validate' do
+    before do
+      singleton.fields = [
+        :current,
+        :date_cre
+      ]
+    end
+
+    context 'with a bad sort field' do
+      it 'raises' do
+        lambda{ singleton.validate({:order_by => 'bad asc'})}.should raise_error(/invalid field/i)
+      end
+    end
+
+    context 'with a bad sort order' do
+      it 'raises' do
+        lambda{ singleton.validate({:order_by => 'current alpha'})}.should raise_error(/invalid sort/i)
+      end
+    end
+  end
 end

@@ -64,6 +64,12 @@ module Lightspeed
         opts.keys.each do |key|
           raise "Unsupported query key: #{key}." unless QUERY_KEYS.include? key.to_sym
         end
+
+        if sort = opts[:order_by]
+          field, order = sort.split(/\s+/)[0..1]
+          raise "Invalid field `#{field}` used for sort" unless fields.include? field.to_sym
+          raise "Invalid sort order `#{order}`" unless ['asc', 'desc'].include? order.downcase
+        end
       end
 
       def full_path suffix = nil
@@ -77,7 +83,7 @@ module Lightspeed
         raise "Calling an abstract method! Use actual resource classes" if clazz == 'Resource'
         clazz
       end
-      
+
       def resource_name
         resource_class.downcase
       end 
@@ -89,7 +95,7 @@ module Lightspeed
       def resource_path
         "/#{resource_plural}/"
       end
-    end  
+    end
 
     def initialize hash
       hash.each do |k, v|
