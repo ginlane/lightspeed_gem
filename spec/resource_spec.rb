@@ -48,7 +48,7 @@ describe Lightspeed::Resource do
 
     context 'for valid input' do
       it 'compiles and `AND` joins filters' do
-        singleton.add_filters!(:current_true => '', :sku_start => 'BEG').should == '(current == TRUEPREDICATE) AND (sku BEGINSWITH[cd] "BEG")'
+        singleton.add_filters!(filters: {current_true: '', sku_start: 'BEG'}).should == '(current == TRUEPREDICATE) AND (sku BEGINSWITH[cd] "BEG")'
       end
     end
   end

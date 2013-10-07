@@ -56,15 +56,17 @@ module Lightspeed
 
       def get command, opts
         validate opts
-        add_fiters! opts
+        add_filters! opts
         resp = Client.get full_path(command), {query: opts}
         cast!(resp.parsed_response)
       end
 
       def add_filters! hash
+        return unless query = hash.delete(:filters) and !query.empty?
+
         pe = PredicateEngine.new filters
-        pe.add_filters hash
-        hash[:filters] = pe.compiled_predicates.join(' AND ')
+        pe.add_filters query
+        hash[:filter] = pe.compiled_predicates.join(' AND ')
       end
 
       def validate opts
@@ -106,8 +108,9 @@ module Lightspeed
 
     def initialize hash
       hash.each do |k, v|
-        next unless self.class.fields.include? k
-        send("#{k}=", v)
+        setter = "#{k}="
+        next unless respond_to?(setter)
+        send(setter, v)
       end
     end
   end
