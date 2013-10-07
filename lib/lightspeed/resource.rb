@@ -75,9 +75,10 @@ module Lightspeed
         end
 
         if sort = opts[:order_by]
-          field, order = sort.split(/\s+/)[0..1]
-          raise "Invalid field `#{field}` used for sort" unless fields.include? field.to_sym
-          raise "Invalid sort order `#{order}`" unless ['asc', 'desc'].include? order.downcase
+          sort.gsub!(' ',':')
+          field, order = sort.split(/:/)[0..1]
+          raise "Invalid field `#{field}` used for sort" unless filter_fields.include? field.to_sym
+          raise "Invalid sort order `#{order}`" unless ['asc', 'desc'].include? order
         end
       end
 
@@ -85,6 +86,10 @@ module Lightspeed
         result = "#{resource_path}#{suffix}" 
         result = "#{result}/" unless result[-1] == '/'
         result
+      end
+
+      def filter_fields
+        filters && filters.map(&:first)
       end
 
       def resource_class
