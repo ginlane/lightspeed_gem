@@ -3,6 +3,7 @@ require "httparty"
 require "lightspeed/version"
 require "lightspeed/client"
 require "lightspeed/predicate_engine"
+require "lightspeed/result_array"
 
 require "lightspeed/resource"
 require "lightspeed/customer"

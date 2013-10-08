@@ -56,12 +56,6 @@ describe Lightspeed::PredicateEngine do
         end
 
         context 'for strings' do
-          context 'for `comparisons`' do
-            it 'raises' do
-              lambda{ instance.add_filters(code_gt: 'VAL')}.should raise_error(/cannot use .+ predicate/i)
-            end
-          end
-
           context 'for `==` predicate' do
             it 'translates o NSPredicate' do
               instance.add_filters(code_eq: 'VAL')

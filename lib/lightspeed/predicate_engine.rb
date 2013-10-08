@@ -10,9 +10,9 @@ module Lightspeed
     PREDICATE_TYPES = {
       :eq => {:operator => '=='},
       :not_eq => {:operator => '<>'},
-      :lt => {:operator => '<', :only => [:float, :integer]},
+      :lt => {:operator => '<'},
       :lteq => {:operator => '<=', :only => [:float, :integer]},
-      :gt => {:operator => '>', :only => [:float, :integer]},
+      :gt => {:operator => '>'},
       :gteq => {:operator => '>=', :only => [:float, :integer]},
       :cont => {:operator => 'CONTAINS[cd]', :only => [:string]},
       :not_cont => {:operator => 'CONTAINS[cd]', :compound => 'NOT', :only => [:string]},

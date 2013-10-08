@@ -5,19 +5,11 @@ module Lightspeed
       QUERY_KEYS = [:count, :order_by, :filters]
 
       def all query = {}
-        find_by_id(nil,  query)
+        get(nil,  query)
       end
 
       def find_by_id id, query = {}
-        resp = get(id, query)
-        data = resp[resource_name.to_sym] || resp[resource_plural.to_sym][resource_name.to_sym]
-
-        if id
-          self.new data
-        else
-          data = [data] unless data.is_a? Array
-          data.map{|hash| self.new hash}
-        end
+        get(id, query)
       end
       alias :find :find_by_id
 
@@ -54,11 +46,37 @@ module Lightspeed
         end
       end
 
-      def get command, opts
+      def process_response! resp, opts, command = nil
+        result = cast! resp
+        result = result[resource_name.to_sym] || result[resource_plural.to_sym][resource_name.to_sym]
+
+        if command 
+          self.new result
+        else
+          result = [result] unless result.is_a? Array
+          result = ResultArray.new(result.map{|r| self.new r}) 
+          result.query = opts
+          result.sort, result.order = parse_sort opts
+        end
+
+       result 
+      end
+
+      def process_options! opts
         validate opts
+        add_default_scope! opts
         add_filters! opts
-        resp = Client.get full_path(command), {query: opts}
-        cast!(resp.parsed_response)
+      end
+
+      def get command, opts
+        process_options! opts
+        resp = Client.get(full_path(command), {query: opts}).parsed_response
+        process_response! resp, opts, command
+      end
+
+      def add_default_scope! opts
+        opts[:count] ||= 50
+        opts[:order_by] ||= 'id:desc'
       end
 
       def add_filters! hash
@@ -69,17 +87,23 @@ module Lightspeed
         hash[:filter] = pe.compiled_predicates.join(' AND ')
       end
 
+      def parse_sort opts
+        return unless sort = opts[:order_by]
+
+        sort.gsub!(' ',':')
+        field, order = sort.split(/:/)[0..1]
+        raise "Invalid field `#{field}` used for sort" unless filter_fields.include? field.to_sym
+        raise "Invalid sort order `#{order}`" unless ['asc', 'desc'].include? order
+
+        [field, order]
+      end
+
       def validate opts
         opts.keys.each do |key|
           raise "Unsupported query key: #{key}." unless QUERY_KEYS.include? key.to_sym
         end
 
-        if sort = opts[:order_by]
-          sort.gsub!(' ',':')
-          field, order = sort.split(/:/)[0..1]
-          raise "Invalid field `#{field}` used for sort" unless filter_fields.include? field.to_sym
-          raise "Invalid sort order `#{order}`" unless ['asc', 'desc'].include? order
-        end
+        parse_sort opts
       end
 
       def full_path suffix = nil

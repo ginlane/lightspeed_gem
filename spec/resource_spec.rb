@@ -22,6 +22,10 @@ describe Lightspeed::Resource do
   context 'on ::validate' do
     before do
       singleton.fields = [:current, :date_cre]
+      singleton.filters = [
+        [:current, :boolean, 'Somee desc'],
+        [:sku, :string, 'some more desc']
+      ]
     end
 
     context 'with a bad sort field' do
