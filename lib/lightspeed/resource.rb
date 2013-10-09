@@ -51,7 +51,7 @@ module Lightspeed
         result = result[resource_name.to_sym] || result[resource_plural.to_sym][resource_name.to_sym]
 
         if command 
-          self.new result
+          result = self.new result
         else
           result = [result] unless result.is_a? Array
           result = ResultArray.new(result.map{|r| self.new r}) 
