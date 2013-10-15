@@ -18,5 +18,11 @@ describe Lightspeed::Client do
       singleton.instance_variable_get(:@app_id).should == 'alpha123'
       singleton.instance_variable_get(:@endpoint).should == 'https://localhost:9966'
     end
+
+    it 'accepts an optional scope' do
+      singleton.config_from_yaml('spec/scoped-example-config.yml', :development)
+      singleton.instance_variable_get(:@app_id).should == 'alpha2'
+      singleton.instance_variable_get(:@endpoint).should == 'https://localhost:2222'
+    end
   end
 end

@@ -15,7 +15,7 @@ module Lightspeed
         opts = YAML.load(File.open file)
 
         config = if env
-          opts[env]
+          opts[env.to_s] || opts[env.to_sym]
         else
           opts
         end

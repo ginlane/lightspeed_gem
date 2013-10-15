@@ -1,0 +1,7 @@
+development:
+  user_agent: com.some_client/2.0
+  app_id: alpha2
+  cookie: LS_SERVER_SESSION_ID=things2=; Path=/; secure;
+  endpoint: https://localhost:2222
+  username: bobby2
+  password: tables2
