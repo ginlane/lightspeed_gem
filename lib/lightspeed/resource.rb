@@ -51,8 +51,9 @@ module Lightspeed
         result = result[resource_name.to_sym] || result[resource_plural.to_sym][resource_name.to_sym]
 
         if command 
-          result = self.new result
+          result && (result = self.new result)
         else
+          return [] if result.nil?
           result = [result] unless result.is_a? Array
           result = ResultArray.new(result.map{|r| self.new r}) 
           result.query = opts
