@@ -48,6 +48,8 @@ module Lightspeed
 
       def process_response! resp, opts, command = nil
         result = cast! resp
+        raise "Lightspeed server exception: #{result[:error][:type].gsub(/\W/, ' ')}" if result[:error]
+
         result = result[resource_name.to_sym] || result[resource_plural.to_sym][resource_name.to_sym]
 
         if command 
