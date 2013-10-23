@@ -1,14 +1,29 @@
 module Lightspeed
   class User < Resource
     self.fields = [
+      :password,
+      :email,
+      :uri,
+      :id,
+      :full_render,
       :username,
       :name,
-      :email,
       :account_locked,
       :privilege_group,
       :read_eula,
+      :hidden,
+      :enabled,
+      :phone,
+      :open_to_pos,
+      :can_open_from_otr,
+      :can_discount,
       :internal_user,
-      :active
+      :active,
+      :expired,
+      :display_welcome,
+      :product,
+      :product_code,
+      :gsx_tech_id
     ]
 
     attr_accessor *self.fields
