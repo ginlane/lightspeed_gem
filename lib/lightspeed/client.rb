@@ -41,13 +41,17 @@ module Lightspeed
         opts
       end
 
-      def get url, opts 
+      def get url, opts={}
         filtered_opts = opts.dup
         filtered_opts[:verify] = false if (@ssl_verify == false)
 
         super(url, filtered_opts)
       end
 
+      def users
+        get '/users/'
+      end
+      
       def logout
         post '/sessions/current/logout/'
       end
