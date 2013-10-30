@@ -20,8 +20,8 @@ module Lightspeed
       :not_start => {:operator => 'BEGINSWITH[cd]', :compound => 'NOT', :only => [:string]},
       :end =>  {:operator => 'ENDSWITH[cd]', :only => [:string] },
       :not_end => {:operator => 'ENDSWITH[cd]', :compound => 'NOT', :only => [:string]},
-      :true => {:operator => '==', :formatter => proc {|v| 'TRUEPREDICATE'}, :only => [:boolean]},
-      :false => {:operator => '==', :formatter => proc {|v| 'FALSEPREDICATE' }, :only => [:boolean]},
+      :true => {:operator => '==', :formatter => proc {|v| '1' }, :only => [:boolean]},
+      :false => {:operator => '==', :formatter => proc {|v| '0' }, :only => [:boolean]},
       :null => {:operator => '==', :formatter => proc {|v| 'nil'}},
       :not_null => {:operator => '==', :formatter => proc {|v| 'nil'}, :compound => 'NOT'}
     }
