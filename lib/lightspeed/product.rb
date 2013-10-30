@@ -1,5 +1,14 @@
 module Lightspeed
   class Product < Resource
+
+    def master?
+      flags && flags[:master_model]
+    end
+
+    def variants
+      Product.all(filters: {master_model_false: true, code_start: code})
+    end
+
     self.fields = [
       :class,
       :currency,

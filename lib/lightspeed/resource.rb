@@ -48,7 +48,10 @@ module Lightspeed
 
       def process_response! resp, opts, command = nil
         result = cast! resp
-        raise "Lightspeed server exception: #{result[:error][:type].gsub(/\W/, ' ')}" if result[:error]
+
+        if result[:error]
+          raise "Lightspeed server exception: #{result[:error][:type].gsub(/\W/, ' ')}\n#{result[:error][:traceback]}"
+        end
 
         result = result[resource_name.to_sym] || result[resource_plural.to_sym][resource_name.to_sym]
 
@@ -78,7 +81,9 @@ module Lightspeed
       end
 
       def add_default_scope! opts
-        opts[:count] ||= 50
+        return opts unless opts.empty?
+
+        opts[:count] = 50
         opts[:order_by] ||= 'id:desc'
       end
 
