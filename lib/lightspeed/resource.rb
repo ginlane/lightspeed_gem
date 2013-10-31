@@ -150,5 +150,13 @@ module Lightspeed
         send(setter, v)
       end
     end
+
+    def memoize_output &block
+      key = "@cached_#{caller(1,1)[0].gsub(/.+:in/, '').gsub(/\W/,'')}".to_sym
+      existing_value = instance_variable_get(key)
+      return existing_value if existing_value
+
+      instance_variable_set(key, yield)
+    end
   end
 end

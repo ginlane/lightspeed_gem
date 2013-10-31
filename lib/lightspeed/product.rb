@@ -6,7 +6,9 @@ module Lightspeed
     end
 
     def variants
-      Product.all(filters: {master_model_false: true, code_start: code})
+      memoize_output do
+        Product.all(filters: {master_model_false: true, code_start: code})
+      end
     end
 
     self.fields = [
