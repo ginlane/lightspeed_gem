@@ -146,8 +146,12 @@ module Lightspeed
     def initialize hash
       hash.each do |k, v|
         setter = "#{k}="
-        next unless respond_to?(setter)
-        send(setter, v)
+        alt_setter = "ls_#{k}="
+        if respond_to?(setter)
+          send(setter, v)
+        elsif respond_to?(alt_setter)
+          send(alt_setter, v)
+        end
       end
     end
 
@@ -157,6 +161,15 @@ module Lightspeed
       return existing_value if existing_value
 
       instance_variable_set(key, yield)
+    end
+
+    def load
+      p = self.class.find id
+      self.class.fields.each do |attr|
+        self.send("#{attr}=", p.send(attr))
+      end
+
+      self
     end
   end
 end

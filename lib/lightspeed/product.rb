@@ -45,7 +45,7 @@ module Lightspeed
     end
 
     self.fields = [
-      :class,
+      :ls_class,
       :currency,
       :code,
       :costs,
