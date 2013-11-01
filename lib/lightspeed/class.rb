@@ -1,5 +1,11 @@
 module Lightspeed
   class Class < Resource
+    
+    class << self
+      def resource_plural
+        "#{resource_name}es"
+      end
+    end
 
     self.fields = [
       :name
