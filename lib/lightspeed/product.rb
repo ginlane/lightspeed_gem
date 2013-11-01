@@ -18,6 +18,14 @@ module Lightspeed
       end
     end
 
+    def category_name
+      return unless full_render
+
+      memoize_output do 
+        ls_class[:id] && Class.find(ls_class[:id]).name
+      end
+    end
+
     def color
       product_info && product_info[:color]
     end

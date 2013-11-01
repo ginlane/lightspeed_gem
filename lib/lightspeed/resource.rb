@@ -9,6 +9,8 @@ module Lightspeed
       end
 
       def find_by_id id, query = {}
+        raise "ID required when retrieving specific records!" unless id
+
         get(id, query)
       end
       alias :find :find_by_id
