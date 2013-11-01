@@ -5,6 +5,39 @@ module Lightspeed
       flags && flags[:master_model]
     end
 
+    def cost
+      costs && costs[:cost]
+    end
+
+    def description_copy
+      long_web_description ||
+        (description && desctiption[:__content__])
+    end
+
+    def color
+      product_info && product_info[:color]
+    end
+
+    def height
+      product_info && product_info[:height]
+    end
+
+    def length
+      product_info && product_info[:length]
+    end
+
+    def size
+      product_info && product_info[:size]
+    end
+
+    def weight
+      product_info && product_info[:weight]
+    end
+
+    def width
+      product_info && product_info[:width]
+    end
+
     def variants
       memoize_output do
         Product.all(filters: {master_model_false: true, code_start: code})
@@ -101,5 +134,8 @@ module Lightspeed
       [:upc, :string, "UPC code of product"],
       [:web, :boolean, "Is product checked to sell on webstore?"]
     ]
+
+    alias_method :sku, :code
+    alias_method :price, :sell_price
   end
 end
