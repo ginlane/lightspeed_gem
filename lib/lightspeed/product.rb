@@ -11,7 +11,7 @@ module Lightspeed
 
     def description_copy
       long_web_description ||
-        (description && desctiption[:__content__])
+        (description && description[:__content__])
     end
 
     def color
