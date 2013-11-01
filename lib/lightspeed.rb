@@ -10,6 +10,7 @@ require "lightspeed/customer"
 require "lightspeed/product"
 require "lightspeed/invoice"
 require "lightspeed/user"
+require "lightspeed/class"
 
 #HTTParty::Request.const_set('SupportedHTTPMethods', [
 #      Net::HTTP::Get,
