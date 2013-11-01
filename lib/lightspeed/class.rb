@@ -11,6 +11,8 @@ module Lightspeed
       :name
     ]
 
+    attr_accessor *self.fields
+
     self.filters = [
       [:id, :integer, "Resource ID"],
       [:classname, :string, "Name of class"]
