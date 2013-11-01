@@ -10,8 +10,12 @@ module Lightspeed
     end
 
     def description_copy
-      long_web_description ||
-        (description && description[:__content__])
+      if full_render
+        long_web_description ||
+          (description && description[:__content__])
+      else
+        description
+      end
     end
 
     def color
