@@ -50,6 +50,12 @@ module Lightspeed
       product_info && product_info[:width]
     end
 
+    def full_variants
+      memoize_output do
+        variants.map(&:load)
+      end
+    end
+
     def variants
       memoize_output do
         Product.all(filters: {master_model_false: true, code_start: code})
