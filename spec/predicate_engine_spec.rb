@@ -43,14 +43,14 @@ describe Lightspeed::PredicateEngine do
           context 'for `true` predicate' do
             it 'translates to NSPredicate form' do
               instance.add_filters(:current_true => true)
-              instance.compiled_predicates.should == ['(current == TRUEPREDICATE)']
+              instance.compiled_predicates.should == ['(current == 1)']
             end
           end
 
           context 'for `false` predicate' do
             it 'translates to NSPredicate form' do
               instance.add_filters(:current_false => 1)
-              instance.compiled_predicates.should == ['(current == FALSEPREDICATE)']
+              instance.compiled_predicates.should == ['(current == 0)']
             end
           end
         end
