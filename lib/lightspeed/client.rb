@@ -41,13 +41,9 @@ module Lightspeed
         opts
       end
 
-<<<<<<< HEAD
       def get url, opts={}
-=======
-      def get url, opts 
         raise "Lightspeed credentials not set" unless @endpoint and @username and @password
 
->>>>>>> e7bce614a440507850409c6166e37969f952cac6
         filtered_opts = opts.dup
         filtered_opts[:verify] = false if (@ssl_verify == false)
 
