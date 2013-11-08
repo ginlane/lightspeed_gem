@@ -1,5 +1,10 @@
 module Lightspeed
   class Product < Resource
+    class << self
+      def all_master_records
+        all(filters: {master_model_true: ''})
+      end
+    end
 
     def master?
       flags && flags[:master_model]
