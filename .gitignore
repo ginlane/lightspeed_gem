@@ -1,5 +1,5 @@
 lightspeed.yml
-lightspeed*.yml
+*lightspeed*.yml
 
 .DS_Store
 *.gem

@@ -9,6 +9,8 @@ module Lightspeed
       end
 
       def find_by_id id, query = {}
+        raise "ID required when retrieving specific records!" unless id
+
         get(id, query)
       end
       alias :find :find_by_id
@@ -48,7 +50,10 @@ module Lightspeed
 
       def process_response! resp, opts, command = nil
         result = cast! resp
-        raise "Lightspeed server exception: #{result[:error][:type].gsub(/\W/, ' ')}" if result[:error]
+
+        if result[:error]
+          raise "Lightspeed server exception: #{result[:error][:type].gsub(/\W/, ' ')}\n#{result[:error][:traceback]}"
+        end
 
         result = result[resource_name.to_sym] || result[resource_plural.to_sym][resource_name.to_sym]
 
@@ -78,7 +83,9 @@ module Lightspeed
       end
 
       def add_default_scope! opts
-        opts[:count] ||= 50
+        return opts unless opts.empty?
+
+        opts[:count] = 50
         opts[:order_by] ||= 'id:desc'
       end
 
@@ -141,9 +148,30 @@ module Lightspeed
     def initialize hash
       hash.each do |k, v|
         setter = "#{k}="
-        next unless respond_to?(setter)
-        send(setter, v)
+        alt_setter = "ls_#{k}="
+        if respond_to?(setter)
+          send(setter, v)
+        elsif respond_to?(alt_setter)
+          send(alt_setter, v)
+        end
       end
+    end
+
+    def memoize_output &block
+      key = "@cached_#{caller(1,1)[0].gsub(/.+:in/, '').gsub(/\W/,'')}".to_sym
+      existing_value = instance_variable_get(key)
+      return existing_value if existing_value
+
+      instance_variable_set(key, yield)
+    end
+
+    def load
+      p = self.class.find id
+      self.class.fields.each do |attr|
+        self.send("#{attr}=", p.send(attr))
+      end
+
+      self
     end
   end
 end

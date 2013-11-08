@@ -20,8 +20,8 @@ module Lightspeed
       :not_start => {:operator => 'BEGINSWITH[cd]', :compound => 'NOT', :only => [:string]},
       :end =>  {:operator => 'ENDSWITH[cd]', :only => [:string] },
       :not_end => {:operator => 'ENDSWITH[cd]', :compound => 'NOT', :only => [:string]},
-      :true => {:operator => '==', :formatter => proc {|v| 'TRUEPREDICATE'}, :only => [:boolean]},
-      :false => {:operator => '==', :formatter => proc {|v| 'FALSEPREDICATE' }, :only => [:boolean]},
+      :true => {:operator => '==', :formatter => proc {|v| '1' }, :only => [:boolean]},
+      :false => {:operator => '==', :formatter => proc {|v| '0' }, :only => [:boolean]},
       :null => {:operator => '==', :formatter => proc {|v| 'nil'}},
       :not_null => {:operator => '==', :formatter => proc {|v| 'nil'}, :compound => 'NOT'}
     }
@@ -57,11 +57,11 @@ module Lightspeed
     def add_filter field_cond, value
       field, predicate = separate_field_and_predicate field_cond.to_s
       opts = PREDICATE_TYPES[predicate.to_sym]
-      formatter, compound, operator = opts.values_at(:formatter, :compound, :operator)
+      formatter, compound, operator, types = opts.values_at(:formatter, :compound, :operator, :only)
 
       validate_filter field, predicate, opts
       
-      converted_value = (formatter and formatter.call(value)) || format_typed_value(value)
+      converted_value = (formatter and formatter.call(value)) || infer_value_format(value, types)
       refinement = "#{field} #{operator} #{converted_value}"
       refinement = "#{compound} (#{refinement})" if compound
 
@@ -69,9 +69,8 @@ module Lightspeed
       self.compiled_predicates << "(#{refinement})"
     end
 
-    def format_typed_value v
-      case v
-      when String
+    def infer_value_format v, types
+      if (v.is_a? String) || (types == [:string])
         "\"#{v}\""
       else
         v

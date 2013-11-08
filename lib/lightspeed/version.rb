@@ -1,3 +1,3 @@
 module Lightspeed
-  VERSION = "0.0.8"
+  VERSION = "0.1.3"
 end

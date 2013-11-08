@@ -1,7 +1,74 @@
 module Lightspeed
   class Product < Resource
+    class << self
+      def master_records
+        all(filters: {master_model_true: ''})
+      end
+    end
+
+    def master?
+      flags && flags[:master_model]
+    end
+
+    def cost
+      costs && costs[:cost]
+    end
+
+    def description_copy
+      if full_render
+        long_web_description ||
+          (description && description[:__content__])
+      else
+        description
+      end
+    end
+
+    def category_name
+      return unless full_render
+
+      memoize_output do 
+        ls_class[:id] && Class.find(ls_class[:id]).name
+      end
+    end
+
+    def color
+      product_info && product_info[:color]
+    end
+
+    def height
+      product_info && product_info[:height]
+    end
+
+    def length
+      product_info && product_info[:length]
+    end
+
+    def size
+      product_info && product_info[:size]
+    end
+
+    def weight
+      product_info && product_info[:weight]
+    end
+
+    def width
+      product_info && product_info[:width]
+    end
+
+    def loaded_variants
+      memoize_output do
+        variants.map(&:load)
+      end
+    end
+
+    def variants
+      memoize_output do
+        Product.all(filters: {master_model_false: true, code_start: code})
+      end
+    end
+
     self.fields = [
-      :class,
+      :ls_class,
       :currency,
       :code,
       :costs,
@@ -90,5 +157,8 @@ module Lightspeed
       [:upc, :string, "UPC code of product"],
       [:web, :boolean, "Is product checked to sell on webstore?"]
     ]
+
+    alias_method :sku, :code
+    alias_method :price, :sell_price
   end
 end
