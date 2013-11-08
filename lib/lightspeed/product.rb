@@ -1,7 +1,7 @@
 module Lightspeed
   class Product < Resource
     class << self
-      def all_master_records
+      def master_records
         all(filters: {master_model_true: ''})
       end
     end
@@ -55,7 +55,7 @@ module Lightspeed
       product_info && product_info[:width]
     end
 
-    def full_variants
+    def loaded_variants
       memoize_output do
         variants.map(&:load)
       end
