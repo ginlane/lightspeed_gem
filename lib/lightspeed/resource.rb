@@ -85,7 +85,7 @@ module Lightspeed
       def add_default_scope! opts
         return opts unless opts.empty?
 
-        opts[:count] = 50
+        #opts[:count] = 50
         opts[:order_by] ||= 'id:desc'
       end
 
