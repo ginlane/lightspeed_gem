@@ -55,7 +55,7 @@ module Lightspeed
           raise "Lightspeed server exception: #{result[:error][:type].gsub(/\W/, ' ')}\n#{result[:error][:traceback]}"
         end
 
-        result = result[resource_name.to_sym] || result[resource_plural.to_sym][resource_name.to_sym]
+        result = result[resource_name.to_sym] || (result[resource_plural.to_sym] and result[resource_plural.to_sym][resource_name.to_sym])
 
         if command 
           result && (result = self.new result)
