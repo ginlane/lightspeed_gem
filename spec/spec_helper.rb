@@ -2,6 +2,7 @@ require 'rspec'
 require 'lightspeed'
 
 require 'vcr_setup'
+require 'support/ls_requests'
 
 RSpec.configure do |config|
   config.before(:all) do
@@ -11,5 +12,6 @@ RSpec.configure do |config|
   config.after(:all) do |config|
     Lightspeed::Client.logout
   end
-end
 
+  config.include LsRequests
+end
