@@ -12,19 +12,11 @@ require "lightspeed/invoice"
 require "lightspeed/user"
 require "lightspeed/class"
 
-#HTTParty::Request.const_set('SupportedHTTPMethods', [
-#      Net::HTTP::Get,
-#      Net::HTTP::Post,
-#      Net::HTTP::Patch,
-#      Net::HTTP::Put,
-#      Net::HTTP::Delete,
-#      Net::HTTP::Head,
-#      Net::HTTP::Options,
-#      Net::HTTP::Move,
-#      Net::HTTP::Copy,
-#      Net::HTTP::Lock,
-#      Net::HTTP::Unlock
-#    ])
+HTTParty::Request::SupportedHTTPMethods.push(
+  Net::HTTP::Lock,
+  Net::HTTP::Unlock
+)
+
 module Lightspeed
   #  def self.lock(path, options={}, &block)
   #    perform_request Net::HTTP::Lock, path, options, &block      
