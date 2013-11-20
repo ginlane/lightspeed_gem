@@ -79,24 +79,9 @@ module Lightspeed
   #    get '/users/', query: { count: 1, order_by: 'id:asc' }
   #  end
 
-  #  def self.find(id=1)
-  #    get "/#{id}/"
-  #  end
-
-  #  def self.last
-  #    get '/', query: {count: 1, order_by: 'date_cre:desc'}
-  #  end
-  #  def self.first
-  #    get '/', query: {count: 1, order_by: 'date_cre:asc'}
-  #  end
-
   #  def self.since(time=nil)
   #    time ||= 1.days.ago
   #    filter "datetime_mod > \"#{time}\""
-  #  end
-
-  #  def self.filter(query, sort='datetime_mod:desc')
-  #    get '/', query: {filter: "(#{query})"}#, order_by: sort}
   #  end
 
   #  def path
@@ -109,9 +94,6 @@ module Lightspeed
   #  def unlock
   #    self.class.unlock path
   #  end
-  #  def put
-  #    self.attributes = self.class.put path, body: self.attribute_xml
-  #  end
   #  def create
   #    self.attributes = self.class.create '/', body: self.attribute_xml
   #  end
@@ -122,37 +104,11 @@ module Lightspeed
   #    self.attributes.to_xml(root: table, skip_instruct: true, indent: 0, dasherize: false)
   #  end
 
-  #  def update
-  #    lock
-  #    resp = put 
-  #    unlock
-
-  #    resp
-  #  end
-
   #  def create
   #    self.class.post '/', body: self.attribute_xml
   #  end
   #end
 
-  #class Product < Api
-  #  # attr_accessor :code, :description, 
-  #  
-  #  def self.find_by_code(code)
-  #    filter "code contains[cd] \"#{code}\""
-  #  end 
-  #end
 
-  #class Customer < Api
-
-  #end
-
-  #class Invoice < Api
-
-  #end
-
-  #class Lineitem < Invoice
-
-  #end
 
 end
