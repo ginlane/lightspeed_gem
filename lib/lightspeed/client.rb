@@ -64,10 +64,6 @@ module Lightspeed
         super(url, opts)
       end
 
-      def users
-        get '/users/'
-      end
-      
       def logout
         post '/sessions/current/logout/'
       end
