@@ -76,6 +76,12 @@ module Lightspeed
         add_filters! opts
       end
 
+      ['lock', 'unlock'].each do |verb|
+        define_method(verb) do |id|
+          super(id)
+        end
+      end
+
       def get command, opts
         process_options! opts
         resp = Client.get(full_path(command), {query: opts}).parsed_response
@@ -163,6 +169,14 @@ module Lightspeed
       return existing_value if existing_value
 
       instance_variable_set(key, yield)
+    end
+
+    def lock!
+      self.class.lock id
+    end
+
+    def unclock!
+      self.class.unlock id
     end
 
     def load
