@@ -2,9 +2,10 @@ module Lightspeed
   class Resource
     class << self
       attr_accessor :filters, :fields
-      QUERY_KEYS = [:count, :order_by, :filters]
+      QUERY_KEYS = [:count, :order_by, :filters, :path_option]
 
       def all query = {}
+        raise ":path_option required when retriving nested resources" if self == LineItem and !query[:path_option]
         get(nil,  query)
       end
 
@@ -83,8 +84,9 @@ module Lightspeed
       end
 
       def get command, opts
+        path_option = opts.delete(:path_option)
         process_options! opts
-        resp = Client.get(full_path(command), {query: opts}).parsed_response
+        resp = Client.get(full_path(command, path_option), {query: opts}).parsed_response
         process_response! resp, opts, command
       end
 
@@ -122,8 +124,8 @@ module Lightspeed
         parse_sort opts
       end
 
-      def full_path suffix = nil
-        result = "#{resource_path}#{suffix}" 
+      def full_path suffix = nil, option = nil
+        result = "#{resource_path(option)}#{suffix}" 
         result = "#{result}/" unless result[-1] == '/'
         result
       end
@@ -146,12 +148,12 @@ module Lightspeed
         "#{resource_name}s"
       end
 
-      def resource_path
+      def resource_path option = nil
         "/#{resource_plural}/"
       end
     end
 
-    def initialize hash
+    def initialize hash = {}
       hash.each do |k, v|
         setter = "#{k}="
         alt_setter = "ls_#{k}="
@@ -175,7 +177,7 @@ module Lightspeed
       self.class.lock id
     end
 
-    def unclock!
+    def unlock!
       self.class.unlock id
     end
 

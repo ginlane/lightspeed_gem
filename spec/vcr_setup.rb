@@ -5,6 +5,7 @@ VCR.configure do |c|
   c.hook_into :webmock
 
    c.ignore_request do |request|
-    URI(request.uri).path.match 'sessions/current/logout'
+    URI(request.uri).path.match('/sessions/current/logout') ||
+    URI(request.uri).path.match('/api/lineitems')
   end
 end

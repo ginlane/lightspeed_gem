@@ -1,20 +1,31 @@
 module LsRequests
   def ls_product
     VCR.use_cassette('single product') do
-      singleton.find 3
+      Lightspeed::Product.find 3
     end
   end
 
   def ls_products
     VCR.use_cassette('product collection') do
-      singleton.all
+      Lightspeed::Product.all
     end
   end
 
   def ls_invoices
-    VCR.use_cassette('new_lightspeed_products') do
-      singleton.all
+    VCR.use_cassette('invoices') do
+      Lightspeed::Invoice.all
+    end
+  end
+
+  def ls_invoice
+    VCR.use_cassette('invoice') do
+      Lightspeed::Invoice.find 1
+    end
+  end
+
+  def ls_line_items
+    VCR.use_cassette('line_items') do
+      Lightspeed::LineItem.all_for_invoice 1
     end
   end
 end
-
