@@ -1,5 +1,6 @@
 lightspeed.yml
 *lightspeed*.yml
+spec/vcr_cassettes/*.yml
 
 .DS_Store
 *.gem
