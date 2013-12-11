@@ -53,5 +53,9 @@ module Lightspeed
       [:user, :string, " Primary user on invoice"],
       [:voided, :boolean, "Is invoice voided?"]
     ]
+
+    def line_items
+      @cached_line_items ||= LineItem.all_for_invoice id
+    end
   end
 end
