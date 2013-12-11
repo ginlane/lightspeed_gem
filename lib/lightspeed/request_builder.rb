@@ -8,7 +8,9 @@ module Lightspeed
     ]
 
     NESTED_ATTRIBUTE_FIELDS = {
-      :tax => [:rate, :total]
+      :tax => [:rate, :total],
+      :discount => [:type],
+      :pricing_level => [:index]
     }
     NESTED_ATTRIBUTE_FIELDS.default = []
 

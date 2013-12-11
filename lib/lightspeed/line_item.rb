@@ -10,25 +10,31 @@ module Lightspeed
       end
     end
 
-    self.fields = [
+    self.writable_fields = [
+      :product,
+      :quantity,
+      :lineitem_product,
+      :profit_margin,
+      :sell_price,
+      :pricing_level,
+      :discount,
+      :serial_numbers
+    ]
+
+    self.readonly_fields = [
       :id,
       :uri,
       :parent_id,
       :cost,
-      :discount,
-      :pricing_level,
       :ext_status,
-      :profit_margin,
-      :quantity,
       :quantity_backordered,
       :quantity_discount,
-      :sell_price,
       :sells,
       :editable,
-      :lineitem_product,
-      :serial_numbers,
       :taxes
     ]
+
+    self.fields = self.writable_fields + self.readonly_fields
 
     attr_accessor *self.fields
     
