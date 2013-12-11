@@ -5,10 +5,13 @@ module Lightspeed
     let(:singleton){ RequestBuilder }
 
     context '#build' do
+      let(:doc){ Nokogiri::XML(subject.request_body) }
+
       context 'w/ attrs' do
-        subject(:subject){ singleton.new(ls_invoice) }
+        let(:subject){ singleton.new(ls_invoice) }
+
         it 'includes attrs' do
-          subject.request_body.should match(/Seb Bean/)
+          doc.at_xpath('//invoice/invoice_customer/mainname').text.should == 'Seb Bean'
         end
       end
 
