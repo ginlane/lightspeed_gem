@@ -5,14 +5,29 @@ module Lightspeed
         all({:path_option => invoice_id})
       end
 
-      def resource_path option = nil
+      def resource_path option
         "/invoices/#{option}/#{resource_plural}/"
       end
     end
 
     self.fields = [
       :id,
-      :uri
+      :uri,
+      :parent_id,
+      :cost,
+      :discount,
+      :pricing_level,
+      :ext_status,
+      :profit_margin,
+      :quantity,
+      :quantity_backordered,
+      :quantity_discount,
+      :sell_price,
+      :sells,
+      :editable,
+      :lineitem_product,
+      :serial_numbers,
+      :taxes
     ]
 
     attr_accessor *self.fields
@@ -46,5 +61,7 @@ module Lightspeed
       [:tax4_total, :float, "Tax 4 total value"],
       [:tax5_total, :float, "Tax 5 total value"]
     ]
+
+    alias :invoice_id :parent_id
   end
 end
