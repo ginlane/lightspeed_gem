@@ -1,13 +1,16 @@
 module Lightspeed
   class RequestBuilder
-
-    READONLY_FIELDS = [
-      :full_render,
+    ATTRIBUTE_FIELDS = [
       :uri,
-      :datetime_created,
-      :customer,
-      :contact
+      :inclusive,
+      :id,
+      :full_render
     ]
+
+    NESTED_ATTRIBUTE_FIELDS = {
+      :tax => [:rate, :total]
+    }
+    NESTED_ATTRIBUTE_FIELDS.default = []
 
     attr_accessor :record
 
@@ -19,7 +22,7 @@ module Lightspeed
     def build
       Nokogiri::XML::Builder.new do |doc|
         doc.send(record.class.resource_name) do
-          record.class.fields.each do |field|
+          record.class.writable_fields.each do |field|
             next unless value = record.send(field)
             add_values doc, field, value
           end
@@ -28,8 +31,6 @@ module Lightspeed
     end
 
     def add_values doc, field, value
-      return if READONLY_FIELDS.include? field
-
       if value.is_a? Hash
         add_nested_values doc, field, value
       else
@@ -42,8 +43,13 @@ module Lightspeed
     end
 
     def add_nested_values doc, field, value
-      doc.send(field) do
-        value.each do |k,v|
+      attrs, nesteds = value.partition do |k, v|
+        ATTRIBUTE_FIELDS.include?(k) || NESTED_ATTRIBUTE_FIELDS[field].include?(k)
+      end
+      attr_vals, nested_vals = Hash[attrs], Hash[nesteds]
+
+      doc.send(field, attr_vals) do
+        nested_vals.each do |k,v|
           add_values doc, k, v
         end
       end

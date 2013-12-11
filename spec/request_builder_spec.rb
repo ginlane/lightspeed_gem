@@ -12,6 +12,8 @@ module Lightspeed
 
         it 'includes attrs' do
           doc.at_xpath('//invoice/invoice_customer/mainname').text.should == 'Seb Bean'
+          doc.at_xpath('//invoice/tax_code').attr('id').should == '2'
+          doc.at_xpath('//invoice/tax_code/id').should be_nil
         end
       end
 
