@@ -1,14 +1,46 @@
 module Lightspeed
   class Invoice < Resource
     self.fields = [
+      :document_id,
       :datetime_created,
+      :date_created,
+      :datetime_modified,
+      :date_modified,
       :flags,
       :invoice_id,
       :invoice_customer,
+      :source,
+      :invoice_id,
+      :order,
+      :margin,
+      :print_options,
+      :primary_user,
+      :secondary_user,
+      :printed_notes,
+      :internal_notes,
+      :shipping_method,
+      :currency,
+      :terms,
+      :returned_invoice,
+      :cc_info,
+      :due,
+      :exported,
+      :posted,
+      :import_id,
+      :invoice_status,
+      :tax_code,
       :totals,
       :uri,
       :id,
-      :full_render
+      :full_render,
+      :taxes,
+      :station,
+      :pricing_level,
+      :c_discount_percentage,
+      :payments,
+      :lineitems,
+      :billing,
+      :shipping
     ]
 
     attr_accessor *self.fields
