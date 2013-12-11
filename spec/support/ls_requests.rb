@@ -28,4 +28,8 @@ module LsRequests
       Lightspeed::LineItem.all_for_invoice 1
     end
   end
+
+  def ls_line_item
+    ls_line_items.first
+  end
 end
