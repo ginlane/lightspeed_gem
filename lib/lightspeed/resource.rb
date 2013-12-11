@@ -1,7 +1,7 @@
 module Lightspeed
   class Resource
     class << self
-      attr_accessor :filters, :fields
+      attr_accessor :filters, :fields, :writable_fields, :readonly_fields
       QUERY_KEYS = [:count, :order_by, :filters, :path_option]
 
       def all query = {}
@@ -49,7 +49,7 @@ module Lightspeed
         end
       end
 
-      def process_response! resp, opts, command = nil
+      def process_response! resp, opts, command, verb
         result = cast! resp
 
         if result[:error]
@@ -58,7 +58,7 @@ module Lightspeed
 
         result = result[resource_name.to_sym] || (result[resource_plural.to_sym] and result[resource_plural.to_sym][resource_name.to_sym])
 
-        if command 
+        if command || verb == :post
           result && (result = self.new result)
         else
           return [] if result.nil?
@@ -79,7 +79,7 @@ module Lightspeed
 
       ['lock', 'unlock'].each do |verb|
         define_method(verb) do |id|
-          super(id)
+          Client.send(verb, full_path(id))
         end
       end
 
@@ -87,7 +87,13 @@ module Lightspeed
         path_option = opts.delete(:path_option)
         process_options! opts
         resp = Client.get(full_path(command, path_option), {query: opts}).parsed_response
-        process_response! resp, opts, command
+        process_response! resp, opts, command, :get
+      end
+
+      def post command, body, opts = {}
+        path_option = opts.delete(:path_option)
+        resp = Client.post(full_path(command, path_option), :body => body).parsed_response
+        process_response! resp, opts, command, :post
       end
 
       def add_default_scope! opts
@@ -168,6 +174,25 @@ module Lightspeed
       nested_initialize(hash)
     end
 
+    def create
+      raise "Record already has an :id. Use #create with new records strictly" if id
+
+      lock_parent! if nested?
+      send_updates
+      unlock_parent! if nested?
+    end
+
+
+    def save
+      raise "Record needs to have an :id. Use #save with existing records only" unless id
+
+      lock_parent! if nested?
+      lock!
+      send_updates
+      unlock!
+      unlock_parent! if nested?
+    end
+
     def nested_initialize hash
       return unless nested?
       self.parent_id = uri.match(/\/api\/invoices\/(\d+)/)[1].to_i if uri
@@ -202,12 +227,21 @@ module Lightspeed
     end
 
     def load
-      p = self.class.find id, default_opts
+      update_attrs_from_object(self.class.find id, default_opts)
+    end
+
+    def update_attrs_from_object objekt
       self.class.fields.each do |attr|
-        self.send("#{attr}=", p.send(attr))
+        self.send("#{attr}=", objekt.send(attr))
       end
 
       self
+    end
+
+    private
+
+    def send_updates
+      update_attrs_from_object(self.class.post id, RequestBuilder.new(self).request_body)
     end
   end
 end

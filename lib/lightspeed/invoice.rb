@@ -1,18 +1,10 @@
 module Lightspeed
   class Invoice < Resource
-    self.fields = [
-      :document_id,
+    self.writable_fields = [
       :datetime_created,
       :date_created,
-      :datetime_modified,
-      :date_modified,
       :flags,
-      :invoice_id,
       :invoice_customer,
-      :source,
-      :invoice_id,
-      :order,
-      :margin,
       :print_options,
       :primary_user,
       :secondary_user,
@@ -21,27 +13,39 @@ module Lightspeed
       :shipping_method,
       :currency,
       :terms,
-      :returned_invoice,
       :cc_info,
+      :tax_code,
+      :pricing_level,
+      :c_discount_percentage
+    ]
+    self.readonly_fields = [
+      :document_id,
+      :datetime_modified,
+      :date_modified,
+      :invoice_id,
+      :source,
+      :invoice_id,
+      :order,
+      :margin,
+      :returned_invoice,
       :due,
       :exported,
       :posted,
       :import_id,
       :invoice_status,
-      :tax_code,
       :totals,
       :uri,
       :id,
       :full_render,
       :taxes,
       :station,
-      :pricing_level,
-      :c_discount_percentage,
       :payments,
       :lineitems,
       :billing,
       :shipping
     ]
+
+    self.fields = self.writable_fields + self.readonly_fields
 
     attr_accessor *self.fields
     
