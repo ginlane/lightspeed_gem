@@ -157,12 +157,20 @@ module Lightspeed
       hash.each do |k, v|
         setter = "#{k}="
         alt_setter = "ls_#{k}="
+
         if respond_to?(setter)
           send(setter, v)
         elsif respond_to?(alt_setter)
           send(alt_setter, v)
         end
       end
+
+      nested_initialize(hash)
+    end
+
+    def nested_initialize hash
+      return unless nested?
+      self.parent_id = uri.match(/\/api\/invoices\/(\d+)/)[1].to_i if uri
     end
 
     def memoize_output &block
@@ -181,8 +189,20 @@ module Lightspeed
       self.class.unlock id
     end
 
+    def default_opts
+      if nested?
+        {:path_option => parent_id} 
+      else
+        {}
+      end
+    end
+
+    def nested?
+      respond_to? :parent_id
+    end
+
     def load
-      p = self.class.find id
+      p = self.class.find id, default_opts
       self.class.fields.each do |attr|
         self.send("#{attr}=", p.send(attr))
       end
