@@ -9,7 +9,7 @@ RSpec.configure do |config|
     Lightspeed::Client.config_from_yaml 'lightspeed.yml', :test
   end
 
-  config.after(:all) do |config|
+  config.after(:suite) do |config|
     Lightspeed::Client.logout
   end
 
