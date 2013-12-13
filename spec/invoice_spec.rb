@@ -19,6 +19,15 @@ module Lightspeed
       end
     end
 
+    context '#build_line_item' do
+      let(:invoice){  singleton.new.create }
+      it 'returns a LineItem instance' do
+        li = invoice.build_line_item
+        li.parent_id.should be_a(Integer)
+        li.parent.should == invoice
+      end
+    end
+
     context '#create' do
       context 'with empty args' do
         it 'returns an instance' do

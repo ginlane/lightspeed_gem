@@ -48,6 +48,18 @@ module Lightspeed
     self.fields = self.writable_fields + self.readonly_fields
 
     attr_accessor *self.fields
+
+    def line_items
+      @cached_line_items ||= LineItem.all_for_invoice id
+    end
+
+    def build_line_item
+      raise "Please persist the invoice before building line items" unless id
+      li = LineItem.new
+      li.parent_id = id
+      li.parent = self
+      li
+    end
     
     self.filters = [
       [:age, :integer, "Age of the invoice (how many days has the status been owing)"],
@@ -90,8 +102,5 @@ module Lightspeed
       [:voided, :boolean, "Is invoice voided?"]
     ]
 
-    def line_items
-      @cached_line_items ||= LineItem.all_for_invoice id
-    end
   end
 end

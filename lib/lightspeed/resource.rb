@@ -56,6 +56,7 @@ module Lightspeed
           raise "Lightspeed server exception: #{result[:error][:type].gsub(/\W/, ' ')}\n#{result[:error][:traceback]}"
         end
 
+        result = result[:response] || result
         result = result[resource_name.to_sym] || (result[resource_plural.to_sym] and result[resource_plural.to_sym][resource_name.to_sym])
 
         if command || verb != :get
@@ -63,6 +64,7 @@ module Lightspeed
         else
           return [] if result.nil?
           result = [result] unless result.is_a? Array
+
           result = ResultArray.new(result.map{|r| self.new r}) 
           result.query = opts
           result.sort, result.order = parse_sort opts
@@ -201,6 +203,22 @@ module Lightspeed
       self.class.unlock id
     end
 
+    def guard_parent
+      raise "Parent resource not set!" unless parent
+    end
+
+    def lock_parent!
+      return unless nested?
+      guard_parent
+      parent.lock!
+    end
+
+    def unlock_parent!
+      return unless nested?
+      guard_parent
+      parent.lock!
+    end
+
     def default_opts
       if nested?
         {:path_option => parent_id} 
@@ -219,7 +237,8 @@ module Lightspeed
 
     def update_attrs_from_object objekt
       self.class.fields.each do |attr|
-        self.send("#{attr}=", objekt.send(attr))
+        next unless value = objekt.send(attr)
+        self.send("#{attr}=", value)
       end
 
       self
@@ -255,11 +274,11 @@ module Lightspeed
     end
 
     def send_creation
-      update_attrs_from_object(self.class.post(id, request_body))
+      update_attrs_from_object(self.class.post(id, request_body, default_opts))
     end
 
     def send_updates
-      update_attrs_from_object(self.class.put(id, request_body))
+      update_attrs_from_object(self.class.put(id, request_body, default_opts))
     end
   end
 end

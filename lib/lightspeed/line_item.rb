@@ -10,6 +10,10 @@ module Lightspeed
       end
     end
 
+    def product_id= id
+      self.product = {id: id}
+    end
+
     self.writable_fields = [
       :product,
       :quantity,
@@ -25,6 +29,7 @@ module Lightspeed
       :id,
       :uri,
       :parent_id,
+      :parent,
       :cost,
       :ext_status,
       :quantity_backordered,

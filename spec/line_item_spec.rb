@@ -45,5 +45,17 @@ module Lightspeed
         line_item.default_opts[:path_option].should be_a(Integer)
       end
     end
+
+    context '#create' do
+      let(:new_invoice){ Invoice.new.create }
+      let(:product){ ls_product }
+      it 'persists' do
+        li = new_invoice.build_line_item
+        li.product_id = product.id
+        li.quantity = 1
+        li.create
+        li.lineitem_product[:code].should be_a(String)
+      end
+    end
   end
 end
