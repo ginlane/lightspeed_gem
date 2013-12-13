@@ -5,7 +5,21 @@ module Lightspeed
     let(:singleton){ Invoice }
     let(:collection){ ls_invoices }
 
-    context '::create' do
+    context '#save' do
+      let(:new_invoice){  singleton.new }
+
+      context 'with attr changes' do
+        it 'persists the changes' do
+          new_invoice.create
+          name = "Customer Z #{rand(9)}"
+          new_invoice.invoice_customer = {mainname: name}
+          new_invoice.save
+          new_invoice.invoice_customer[:mainname].should == name
+        end
+      end
+    end
+
+    context '#create' do
       context 'with empty args' do
         it 'returns an instance' do
           i = singleton.new

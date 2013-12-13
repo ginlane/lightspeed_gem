@@ -58,7 +58,7 @@ module Lightspeed
 
         result = result[resource_name.to_sym] || (result[resource_plural.to_sym] and result[resource_plural.to_sym][resource_name.to_sym])
 
-        if command || verb == :post
+        if command || verb != :get
           result && (result = self.new result)
         else
           return [] if result.nil?
@@ -94,6 +94,12 @@ module Lightspeed
         path_option = opts.delete(:path_option)
         resp = Client.post(full_path(command, path_option), :body => body).parsed_response
         process_response! resp, opts, command, :post
+      end
+
+      def put command, body, opts = {}
+        path_option = opts.delete(:path_option)
+        resp = Client.put(full_path(command, path_option), :body => body).parsed_response
+        process_response! resp, opts, command, :put
       end
 
       def add_default_scope! opts
@@ -174,25 +180,6 @@ module Lightspeed
       nested_initialize(hash)
     end
 
-    def create
-      raise "Record already has an :id. Use #create with new records strictly" if id
-
-      lock_parent! if nested?
-      send_updates
-      unlock_parent! if nested?
-    end
-
-
-    def save
-      raise "Record needs to have an :id. Use #save with existing records only" unless id
-
-      lock_parent! if nested?
-      lock!
-      send_updates
-      unlock!
-      unlock_parent! if nested?
-    end
-
     def nested_initialize hash
       return unless nested?
       self.parent_id = uri.match(/\/api\/invoices\/(\d+)/)[1].to_i if uri
@@ -238,10 +225,41 @@ module Lightspeed
       self
     end
 
+    def create
+      raise "Record already has an :id. Use #create with new records strictly" if id
+
+      lock_parent! if nested?
+      send_creation
+      unlock_parent! if nested?
+
+      self
+    end
+
+
+    def save
+      raise "Record needs to have an :id. Use #save with existing records only" unless id
+
+      lock_parent! if nested?
+      lock!
+      send_updates
+      unlock!
+      unlock_parent! if nested?
+
+      self
+    end
+
     private
 
+    def request_body
+      RequestBuilder.new(self).request_body
+    end
+
+    def send_creation
+      update_attrs_from_object(self.class.post(id, request_body))
+    end
+
     def send_updates
-      update_attrs_from_object(self.class.post id, RequestBuilder.new(self).request_body)
+      update_attrs_from_object(self.class.put(id, request_body))
     end
   end
 end

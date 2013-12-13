@@ -2,7 +2,6 @@ module Lightspeed
   class Invoice < Resource
     self.writable_fields = [
       :datetime_created,
-      :date_created,
       :flags,
       :invoice_customer,
       :print_options,
@@ -22,6 +21,7 @@ module Lightspeed
       :document_id,
       :datetime_modified,
       :date_modified,
+      :date_created,
       :invoice_id,
       :source,
       :invoice_id,

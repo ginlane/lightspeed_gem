@@ -49,20 +49,20 @@ module Lightspeed
         opts[:verify] = false if (@ssl_verify == false)
       end
 
-      def get url, opts={}
+      def perform_request verb, path, opts = {}, &block
         ensure_credentials
         ensure_ssl_verify opts
 
-        super(url, opts)
+        super
       end
 
-      def post url, opts = {}
-        ensure_credentials
-        ensure_ssl_verify opts
-
-
-        super(url, opts)
+      def lock path, options = {}, &block
+        perform_request Net::HTTP::Lock, path, options, &block      
       end
+
+      def unlock path, options = {}, &block
+        perform_request Net::HTTP::Unlock, path, options, &block      
+      end 
 
       def logout
         post '/sessions/current/logout/'
