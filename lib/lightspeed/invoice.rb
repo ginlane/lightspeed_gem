@@ -46,7 +46,6 @@ module Lightspeed
     ]
 
     self.fields = self.writable_fields + self.readonly_fields
-
     attr_accessor *self.fields
 
     def line_items

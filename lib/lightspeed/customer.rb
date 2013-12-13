@@ -1,15 +1,18 @@
 module Lightspeed
   class Customer < Resource
-    self.fields = [
+
+    self.writable_fields = [
       :name,
       :company,
       :email,
       :homepage,
       :phone_numbers,
-      :photo,
-      :is_company,
       :billing,
       :shipping,
+      :is_company
+    ]
+    self.readonly_fields = [
+      :photo,
       :flags,
       :birthdate,
       :credit_limit,
@@ -27,6 +30,7 @@ module Lightspeed
       :id
     ]
 
+    self.fields = self.writable_fields + self.readonly_fields
     attr_accessor *self.fields
 
     def first_name
