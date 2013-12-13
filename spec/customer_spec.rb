@@ -47,6 +47,16 @@ module Lightspeed
           instance.last_name.should == 'Tables'
         end
       end
+
+      context '#save' do
+        let(:new_customer){ Customer.new.create }
+        it 'persists changes' do
+          fname = "Bobbeh #{rand(9)}"
+          new_customer.name[:first] = fname 
+          new_customer.save
+          new_customer.name[:first].should == fname
+        end
+      end
     end
   end
 end
