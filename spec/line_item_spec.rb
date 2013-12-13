@@ -4,7 +4,7 @@ require 'spec_helper'
 module Lightspeed
   describe LineItem do
     let(:singleton){ LineItem }
-    let(:ls_invoice){ ls_invoice }
+    let(:invoice){ ls_invoice }
     let(:line_items){ ls_line_items }
     let(:line_item){ ls_line_items[0] }
     let(:instance){ ls_line_item }
