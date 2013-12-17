@@ -24,7 +24,6 @@ module Lightspeed
       :date_created,
       :invoice_id,
       :source,
-      :invoice_id,
       :order,
       :margin,
       :returned_invoice,
@@ -52,12 +51,20 @@ module Lightspeed
       @cached_line_items ||= LineItem.all_for_invoice id
     end
 
+    def build resource
+      raise "Please persist the invoice before building #{resource}s" unless id
+      r = "Lightspeed::#{resource.to_s.camelize}".constantize.new
+      r.parent_id = id
+      r.parent = self
+      r
+    end
+
     def build_line_item
-      raise "Please persist the invoice before building line items" unless id
-      li = LineItem.new
-      li.parent_id = id
-      li.parent = self
-      li
+      build :line_item
+    end
+
+    def build_payment
+      build :payment
     end
     
     self.filters = [
