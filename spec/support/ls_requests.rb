@@ -5,9 +5,21 @@ module LsRequests
     end
   end
 
+  def ls_variant
+    VCR.use_cassette('single variant') do
+      Lightspeed::Product.find 88
+    end
+  end
+
+  def ls_variants
+    VCR.use_cassette('variant collection') do
+      Lightspeed::Product.all(filters: {master_model_false: 1})
+    end
+  end
+
   def ls_products
-    VCR.use_cassette('product collection') do
-      Lightspeed::Product.all
+    VCR.use_cassette('product master collection') do
+      Lightspeed::Product.all(filters: {master_model_true: 1})
     end
   end
 

@@ -31,8 +31,20 @@ module Lightspeed
       end
     end
 
+    def code_variant_segments
+      code.match(/\-([^\-]+)\-([^\-]+)\Z/)
+    end
+
+    def inferred_color
+      code_variant_segments[1]
+    end
+
+    def inferred_size
+      code_variant_segments[2]
+    end
+
     def color
-      product_info && product_info[:color]
+      (product_info && product_info[:color]) || inferred_color
     end
 
     def height
@@ -44,7 +56,7 @@ module Lightspeed
     end
 
     def size
-      product_info && product_info[:size]
+      (product_info && product_info[:size]) || inferred_size
     end
 
     def weight
