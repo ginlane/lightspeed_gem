@@ -1,5 +1,7 @@
 module Lightspeed
   class Product < Resource
+    attr_accessor :variants
+    
     class << self
       def master_records
         all(filters: {master_model_true: ''})
@@ -68,16 +70,16 @@ module Lightspeed
     end
 
     def loaded_variants
-      memoize_output do
-        variants.map(&:load)
-      end
+      # memoize_output do
+      #   variants.map(&:load)
+      # end
     end
 
-    def variants
-      memoize_output do
-        Product.all(filters: {master_model_false: true, code_start: code})
-      end
-    end
+    # def variants
+    #   memoize_output do
+    #     Product.all(filters: {master_model_false: true, code_start: code})
+    #   end
+    # end
 
     self.fields = [
       :ls_class,

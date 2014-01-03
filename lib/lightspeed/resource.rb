@@ -216,7 +216,7 @@ module Lightspeed
     def unlock_parent!
       return unless nested?
       guard_parent
-      parent.lock!
+      parent.unlock!
     end
 
     def default_opts
