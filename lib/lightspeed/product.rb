@@ -82,20 +82,27 @@ module Lightspeed
         Product.all(filters: {master_model_false: true, code_start: code})
       end
     end
-
-    self.fields = [
+    
+    self.writable_fields = [
       :ls_class,
-      :currency,
       :code,
       :costs,
       :flags,
+      :description,
+      :family,
+      :sells,
+      :supplier,
+      :supplier_code,
+      :upc
+    ]
+
+    self.readonly_fields = [
+      :currency,
       :sell_price,
       :pricing_levels,
       :created,
       :modified,
-      :description,
       :long_web_description,
-      :family,
       :gl_product,
       :product_id,
       :import_id,
@@ -105,10 +112,6 @@ module Lightspeed
       :notes,
       :product_info,
       :reorder,
-      :sells,
-      :supplier,
-      :supplier_code,
-      :upc,
       :web,
       :keywords,
       :multi_store_label,
@@ -121,6 +124,8 @@ module Lightspeed
       :id,
       :full_render
     ]
+
+    self.fields = self.writable_fields + self.readonly_fields
 
     attr_accessor *self.fields
 
