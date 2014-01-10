@@ -28,6 +28,10 @@ module Lightspeed
       end
     end
 
+    def description_copy=(value)
+      self.description = value
+    end
+
     def category_name
       return unless full_render
 

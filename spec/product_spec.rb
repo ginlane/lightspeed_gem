@@ -22,6 +22,11 @@ describe Lightspeed::Product do
       instance.height = 13
       instance.height.should == 13
     end
+
+    it 'sets description_copy=' do
+      instance.description_copy = 'informations'
+      instance.description.should == 'informations'
+    end
   end
 
   context 'on a full_render' do
