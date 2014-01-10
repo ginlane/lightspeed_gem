@@ -17,6 +17,11 @@ describe Lightspeed::Product do
       instance.cost = 555
       instance.cost.should == 555
     end
+
+    it 'sets height=' do
+      instance.height = 13
+      instance.height.should == 13
+    end
   end
 
   context 'on a full_render' do

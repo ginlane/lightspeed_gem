@@ -1,7 +1,5 @@
 module Lightspeed
   class Product < Resource
-    attr_accessor :variants
-    
     class << self
       def master_records
         all(filters: {master_model_true: ''})
@@ -54,37 +52,32 @@ module Lightspeed
       (product_info && product_info[:color]) || inferred_color
     end
 
-    def height
-      product_info && product_info[:height]
-    end
-
-    def length
-      product_info && product_info[:length]
-    end
-
     def size
       (product_info && product_info[:size]) || inferred_size
     end
 
-    def weight
-      product_info && product_info[:weight]
-    end
+    [:height, :length, :weight, :width].each do |nested_attr|
+      define_method nested_attr do
+        product_info && product_info[nested_attr]
+      end
 
-    def width
-      product_info && product_info[:width]
+      define_method "#{nested_attr}=" do |value|
+        self.product_info ||= {}
+        self.product_info[nested_attr] = value
+      end
     end
-
+    
     def loaded_variants
-      # memoize_output do
-      #   variants.map(&:load)
-      # end
+      memoize_output do
+        variants.map(&:load)
+      end
     end
 
-    # def variants
-    #   memoize_output do
-    #     Product.all(filters: {master_model_false: true, code_start: code})
-    #   end
-    # end
+    def variants
+      memoize_output do
+        Product.all(filters: {master_model_false: true, code_start: code})
+      end
+    end
 
     self.fields = [
       :ls_class,
