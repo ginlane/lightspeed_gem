@@ -11,6 +11,14 @@ describe Lightspeed::Product do
     end
   end
 
+  context 'on nested setters' do
+    let(:instance){ singleton.new }
+    it 'sets cost=' do
+      instance.cost = 555
+      instance.cost.should == 555
+    end
+  end
+
   context 'on a full_render' do
     let(:p){ ls_variant }
 

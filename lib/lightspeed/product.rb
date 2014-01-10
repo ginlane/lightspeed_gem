@@ -16,6 +16,11 @@ module Lightspeed
       costs && costs[:cost]
     end
 
+    def cost=(value)
+      self.costs ||= {}
+      self.costs[:cost] = value
+    end
+
     def description_copy
       if full_render
         long_web_description ||
