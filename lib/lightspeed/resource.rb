@@ -38,9 +38,9 @@ module Lightspeed
           false
         elsif value == 'true'
           true
-        elsif value.match /\A\d+\z/
+        elsif value.match /\A\-?\d+\z/
           value.to_i
-        elsif value.match /\A\d+\.\d+\z/
+        elsif value.match /\A\-?\d+\.\d+\z/
           value.to_f
         elsif value.match /\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/
           DateTime.parse value
