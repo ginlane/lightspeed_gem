@@ -16,7 +16,7 @@ module Lightspeed
       def config_from_yaml file, env = nil
         opts = YAML.load(File.open file)
 
-        config = if env
+        config = if opts.keys.include? env
           opts[env.to_s] || opts[env.to_sym]
         else
           opts
@@ -33,6 +33,7 @@ module Lightspeed
 
         base_uri "#{@endpoint}/api/"
         basic_auth @username, @password
+        http_proxy 'localhost', 8888
 
         headers 'User-Agent'       => @user_agent
         headers 'X-PAPPID'         => @app_id
