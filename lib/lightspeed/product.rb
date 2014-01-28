@@ -60,6 +60,19 @@ module Lightspeed
       (product_info && product_info[:size]) || inferred_size
     end
 
+    def adjust_inventory_path
+      "/product_inventory/#{id}/adjust_inventory/"
+    end
+
+    def adjust_inventory diff, cost=0, source_id='api', note=DateTime.now
+      Client.post adjust_inventory_path, body: {
+        quantity: "#{diff}",
+        cost: cost.to_s,
+        source_id: source_id.to_s,
+        note: note.to_s
+      }.to_xml(root: :adjustment, skip_instruct: true, dasherize: false)
+    end
+
     [:height, :length, :weight, :width].each do |nested_attr|
       define_method nested_attr do
         product_info && product_info[nested_attr]
